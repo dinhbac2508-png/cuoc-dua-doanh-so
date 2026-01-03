@@ -1,136 +1,140 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Cuộc Đua Doanh Số</title>
+<meta charset="UTF-8">
+<title>Cuộc Đua Doanh Số</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      margin: 0;
-      padding: 20px;
-    }
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    margin: 0;
+    padding: 20px;
+  }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+  h1 {
+    text-align: center;
+    margin-bottom: 5px;
+  }
 
-    .target {
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 30px;
-      color: #facc15;
-    }
+  .target {
+    text-align: center;
+    color: #facc15;
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
 
-    .race {
-      display: flex;
-      justify-content: space-around;
-      align-items: flex-end;
-      height: 70vh;
-    }
+  .race {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
 
-    .card {
-      width: 17%;
-      background: #1e293b;
-      border-radius: 16px;
-      padding: 15px;
-      text-align: center;
-      transition: all 0.5s;
-      position: relative;
-    }
+  .lane {
+    position: relative;
+    background: #1e293b;
+    border-radius: 14px;
+    padding: 14px;
+    height: 90px;
+    overflow: hidden;
+  }
 
-    .icon {
-      font-size: 48px;
-    }
+  .info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 2;
+    position: relative;
+  }
 
-    .name {
-      font-size: 18px;
-      margin: 10px 0;
-    }
+  .name {
+    min-width: 160px;
+    font-size: 18px;
+    font-weight: bold;
+  }
 
-    .sales {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
+  .sales {
+    font-size: 16px;
+    color: #a5f3fc;
+  }
 
-    .bar {
-      width: 100%;
-      background: #334155;
-      border-radius: 10px;
-      overflow: hidden;
-      height: 18px;
-    }
+  .track {
+    position: absolute;
+    left: 200px;
+    right: 90px;
+    top: 50%;
+    height: 6px;
+    background: #334155;
+    transform: translateY(-50%);
+    border-radius: 3px;
+  }
 
-    .bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #22c55e, #4ade80);
-      width: 0%;
-      transition: width 1s;
-    }
+  .finish-line {
+    position: absolute;
+    right: 40px;
+    top: 12px;
+    bottom: 12px;
+    width: 6px;
+    background: repeating-linear-gradient(
+      white 0 10px,
+      black 10px 20px
+    );
+  }
 
-    /* ===== TOP 1 ===== */
-    .top1 {
-      transform: scale(1.08);
-      border: 4px solid gold;
-      background: linear-gradient(135deg, #fff1a8, #ffd700);
-      animation: topGlow 1s infinite alternate;
-    }
+  .runner {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    transition: left 1s ease;
+  }
 
-    .top1-badge {
-      position: absolute;
-      top: -15px;
-      right: -15px;
-      background: gold;
-      color: black;
-      font-weight: bold;
-      padding: 8px 12px;
-      border-radius: 50%;
-      font-size: 18px;
-    }
+  /* TOP 1 */
+  .top1 {
+    border: 4px solid gold;
+    background: linear-gradient(135deg, #fff1a8, #ffd700);
+    animation: glow 1s infinite alternate;
+  }
 
-    @keyframes topGlow {
-      from { box-shadow: 0 0 10px gold; }
-      to   { box-shadow: 0 0 30px gold; }
-    }
+  @keyframes glow {
+    from { box-shadow: 0 0 10px gold; }
+    to { box-shadow: 0 0 30px gold; }
+  }
 
-    /* ===== WINNER ===== */
-    .winner {
-      border: 4px solid red;
-    }
+  /* WINNER */
+  .finish {
+    position: absolute;
+    right: 110px;
+    top: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: red;
+  }
 
-    .finish {
-      font-size: 22px;
-      font-weight: bold;
-      color: red;
-      margin-top: 10px;
-    }
+  /* FIREWORK */
+  .firework {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    animation: explode 1s linear infinite;
+  }
 
-    /* ===== FIREWORK ===== */
-    .firework {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 10px;
-      height: 10px;
-      animation: explode 1s linear infinite;
+  @keyframes explode {
+    0% { box-shadow: 0 0 gold; }
+    100% {
+      box-shadow:
+        0 -200px gold,
+        0 200px red,
+        200px 0 blue,
+        -200px 0 green,
+        140px 140px pink,
+        -140px -140px orange;
     }
-
-    @keyframes explode {
-      0% { box-shadow: 0 0 gold; }
-      100% {
-        box-shadow:
-          0 -200px gold,
-          0 200px red,
-          200px 0 blue,
-          -200px 0 green,
-          140px 140px pink,
-          -140px -140px orange;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
@@ -145,64 +149,72 @@
 </audio>
 
 <script>
-  const TARGET = 3000000000;
-  const SHEET_URL = "https://opensheet.elk.sh/1ZFde_VPigMDlqlsM2aVKudr36yW6KmgYSJ_kovAeWNE/DATA";
+const TARGET = 3000000000;
+const SHEET_URL = "https://opensheet.elk.sh/1ZFde_VPigMDlqlsM2aVKudr36yW6KmgYSJ_kovAeWNE/DATA";
 
-  async function loadData() {
-    const res = await fetch(SHEET_URL);
-    const data = await res.json();
+async function loadData() {
+  const res = await fetch(SHEET_URL);
+  const data = await res.json();
 
-    const race = document.getElementById("race");
-    race.innerHTML = "";
+  const race = document.getElementById("race");
+  race.innerHTML = "";
 
-    const maxSales = Math.max(...data.map(d => Number(d["Doanh số hiện tại"])));
-    let hasWinner = false;
+  const maxSales = Math.max(...data.map(d => Number(d["Doanh số hiện tại"])));
+  let hasWinner = false;
 
-    data.forEach(d => {
-      const sales = Number(d["Doanh số hiện tại"]);
-      const percent = Math.min((sales / TARGET) * 100, 100);
+  data.forEach(d => {
+    const sales = Number(d["Doanh số hiện tại"]);
+    const percent = Math.min((sales / TARGET) * 100, 100);
 
-      const card = document.createElement("div");
-      card.className = "card";
+    const lane = document.createElement("div");
+    lane.className = "lane";
 
-      if (sales === maxSales) {
-        card.classList.add("top1");
-        card.innerHTML += `<div class="top1-badge">🥇</div>`;
-      }
+    if (sales === maxSales) {
+      lane.classList.add("top1");
+    }
 
-      if (sales >= TARGET) {
-        card.classList.add("winner");
-        hasWinner = true;
-      }
+    if (sales >= TARGET) {
+      hasWinner = true;
+    }
 
-      card.innerHTML += `
-        <div class="icon">${d.icon}</div>
+    const startX = 200;
+    const endX = window.innerWidth - 160;
+    const posX = startX + (endX - startX) * (percent / 100);
+
+    lane.innerHTML = `
+      <div class="info">
         <div class="name">${d.Tên}</div>
         <div class="sales">${sales.toLocaleString()} VNĐ</div>
-        <div class="bar">
-          <div class="bar-fill" style="width:${percent}%"></div>
-        </div>
-        ${sales >= TARGET ? '<div class="finish">🏁 VỀ ĐÍCH</div>' : ''}
-      `;
+      </div>
 
-      race.appendChild(card);
-    });
+      <div class="track"></div>
+      <div class="finish-line"></div>
 
-    if (hasWinner && !localStorage.getItem("fired")) {
-      showFirework();
-      localStorage.setItem("fired", "yes");
-    }
+      <div class="runner" style="left:${posX}px">
+        ${d.icon}
+      </div>
+
+      ${sales >= TARGET ? '<div class="finish">🏁 VỀ ĐÍCH</div>' : ''}
+    `;
+
+    race.appendChild(lane);
+  });
+
+  if (hasWinner && !localStorage.getItem("fired")) {
+    showFirework();
+    localStorage.setItem("fired", "yes");
   }
+}
 
-  function showFirework() {
-    const fw = document.createElement("div");
-    fw.className = "firework";
-    document.body.appendChild(fw);
-    document.getElementById("winSound").play();
-    setTimeout(() => fw.remove(), 5000);
-  }
+function showFirework() {
+  const fw = document.createElement("div");
+  fw.className = "firework";
+  document.body.appendChild(fw);
+  document.getElementById("winSound").play();
+  setTimeout(() => fw.remove(), 5000);
+}
 
-  loadData();
+loadData();
 </script>
 
 </body>
