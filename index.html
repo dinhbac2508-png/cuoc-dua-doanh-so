@@ -1,231 +1,161 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Cuộc Đua Doanh Số Năm 2025</title>
+<meta charset="UTF-8" />
+<title>Cuộc đua doanh số</title>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: white;
-    margin: 0;
-    padding: 20px;
-  }
+body {
+  margin: 0;
+  background: #0f172a;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-  h1 {
-    text-align: center;
-    margin-bottom: 5px;
-  }
+h1 {
+  text-align: center;
+  padding: 20px 0;
+  margin: 0;
+  font-size: 36px;
+  color: #facc15;
+}
 
-  .target {
-    text-align: center;
-    color: #facc15;
-    font-size: 20px;
-    margin-bottom: 25px;
-  }
+#container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 70vh;
+  padding: 40px;
+  gap: 30px;
+}
 
-  .race {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
+/* mỗi cột */
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 140px;
+}
 
-  .lane {
-    position: relative;
-    background: #1e293b;
-    border-radius: 14px;
-    padding: 14px;
-    height: 90px;
-    overflow: hidden;
-  }
+/* icon */
+.icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
 
-  .info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    z-index: 2;
-    position: relative;
-  }
+/* cột doanh số */
+.bar {
+  width: 100%;
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+  border-radius: 14px 14px 0 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: height 1s ease;
+  box-shadow: 0 0 12px rgba(34,197,94,0.7);
+}
 
-  .name {
-  min-width: 230px;
-  font-size: 25px;
+/* số tiền */
+.sales {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #facc15;
+  text-shadow: 0 0 6px rgba(250,204,21,0.7);
+}
+
+/* tên */
+.name {
+  margin-top: 12px;
+  font-size: 20px;
   font-weight: bold;
+  text-align: center;
 }
 
-
-  .sales {
-  font-size: 26px;        /* TO */
-  font-weight: 800;      /* ĐẬM */
-  color: #facc15;        /* VÀNG NỔI */
-  text-shadow: 0 0 6px rgba(250,204,21,0.6);
+/* top 1 */
+.column.leader .bar {
+  background: linear-gradient(180deg, #facc15, #eab308);
+  box-shadow: 0 0 20px rgba(250,204,21,0.9);
 }
-
-
-  .track {
-  position: absolute;
-  left: 220px;
-  right: 110px;
-  top: 50%;
-  height: 14px;              /* TO HƠN */
-  background: linear-gradient(
-    90deg,
-    #475569,
-    #64748b,
-    #475569
-  );
-  transform: translateY(-50%);
-  border-radius: 8px;
-  box-shadow: inset 0 0 6px rgba(0,0,0,0.6);
-}
-
-  .finish-line {
-    position: absolute;
-    right: 40px;
-    top: 12px;
-    bottom: 12px;
-    width: 6px;
-    background: repeating-linear-gradient(
-      white 0 10px,
-      black 10px 20px
-    );
-  }
-
-  .runner {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 56px;        /* ICON TO HƠN */
-  transition: left 1s ease;
-  z-index: 3;
-}
-
-  /* TOP 1 */
-  .top1 {
-    border: 4px solid gold;
-    background: linear-gradient(135deg, #fff1a8, #ffd700);
-    animation: glow 1s infinite alternate;
-  }
-
-  @keyframes glow {
-    from { box-shadow: 0 0 10px gold; }
-    to { box-shadow: 0 0 30px gold; }
-  }
-
-  /* WINNER */
-  .finish {
-    position: absolute;
-    right: 110px;
-    top: 10px;
-    font-size: 22px;
-    font-weight: bold;
-    color: red;
-  }
-
-  /* FIREWORK */
-  .firework {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 10px;
-    height: 10px;
-    animation: explode 1s linear infinite;
-  }
-
-  @keyframes explode {
-    0% { box-shadow: 0 0 gold; }
-    100% {
-      box-shadow:
-        0 -200px gold,
-        0 200px red,
-        200px 0 blue,
-        -200px 0 green,
-        140px 140px pink,
-        -140px -140px orange;
-    }
-  }
 </style>
 </head>
 
 <body>
+<h1>🏆 CUỘC ĐUA DOANH SỐ THÁNG</h1>
 
-<h1>🏁 CUỘC ĐUA DOANH SỐ NĂM 2025</h1>
-<div class="target">🎯 Mục tiêu: 3.000.000.000 VNĐ</div>
-
-<div class="race" id="race"></div>
-
-<audio id="winSound">
-  <source src="https://actions.google.com/sounds/v1/alarms/celebration.ogg" type="audio/ogg">
-</audio>
+<div id="container"></div>
 
 <script>
-const TARGET = 3000000000;
-const SHEET_URL = "https://opensheet.elk.sh/1ZFde_VPigMDlqlsM2aVKudr36yW6KmgYSJ_kovAeWNE/DATA";
+/* ====== CẤU HÌNH ====== */
+const TARGET = 3000000000; // 3 TỶ
+const SHEET_ID = "1ZFde_VPigMDlqlsM2aVKudr36yW6KmgYSJ_kovAeWNE";
+const SHEET_NAME = "Sheet1";
+const REFRESH_TIME = 30000; // 30 giây
 
+/* ====== LOAD DATA ====== */
 async function loadData() {
-  const res = await fetch(SHEET_URL);
-  const data = await res.json();
+  const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+  const res = await fetch(url);
+  const rows = await res.json();
 
-  const race = document.getElementById("race");
-  race.innerHTML = "";
+  const data = rows.map(r => ({
+    name: r.name,
+    icon: r.icon || "💼",
+    sales: Number(r.sales.toString().replace(/[^\d]/g, ""))
+  }));
 
-  const maxSales = Math.max(...data.map(d => Number(d["Doanh số hiện tại"])));
-  let hasWinner = false;
+  render(data);
+}
 
-  data.forEach(d => {
-    const sales = Number(d["Doanh số hiện tại"]);
-    const percent = Math.min((sales / TARGET) * 100, 100);
+/* ====== HIỂN THỊ ====== */
+function render(data) {
+  // sắp xếp giảm dần
+  data.sort((a, b) => b.sales - a.sales);
 
-    const lane = document.createElement("div");
-    lane.className = "lane";
+  const container = document.getElementById("container");
+  container.innerHTML = "";
 
-    if (sales === maxSales) {
-      lane.classList.add("top1");
-    }
+  data.forEach((item, index) => {
+    const percent = Math.min(item.sales / TARGET * 100, 100);
 
-    if (sales >= TARGET) {
-      hasWinner = true;
-    }
+    const col = document.createElement("div");
+    col.className = "column";
+    if (index === 0) col.classList.add("leader");
 
-    const startX = 200;
-    const endX = window.innerWidth - 160;
-    const posX = startX + (endX - startX) * (percent / 100);
+    const icon = document.createElement("div");
+    icon.className = "icon";
+    icon.textContent = item.icon;
 
-    lane.innerHTML = `
-      <div class="info">
-        <div class="name">${d.Tên}</div>
-        <div class="sales">${sales.toLocaleString()} VNĐ</div>
-      </div>
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.style.height = percent + "%";
 
-      <div class="track"></div>
-      <div class="finish-line"></div>
+    const sales = document.createElement("div");
+    sales.className = "sales";
+    sales.textContent = formatMoney(item.sales);
 
-      <div class="runner" style="left:${posX}px">
-        ${d.icon}
-      </div>
+    bar.appendChild(sales);
 
-      ${sales >= TARGET ? '<div class="finish">🏁 VỀ ĐÍCH</div>' : ''}
-    `;
+    const name = document.createElement("div");
+    name.className = "name";
+    name.textContent = item.name;
 
-    race.appendChild(lane);
+    col.appendChild(icon);
+    col.appendChild(bar);
+    col.appendChild(name);
+
+    container.appendChild(col);
   });
-
-  if (hasWinner && !localStorage.getItem("fired")) {
-    showFirework();
-    localStorage.setItem("fired", "yes");
-  }
 }
 
-function showFirework() {
-  const fw = document.createElement("div");
-  fw.className = "firework";
-  document.body.appendChild(fw);
-  document.getElementById("winSound").play();
-  setTimeout(() => fw.remove(), 5000);
+/* ====== FORMAT TIỀN ====== */
+function formatMoney(n) {
+  return n.toLocaleString("vi-VN") + " ₫";
 }
 
+/* ====== CHẠY ====== */
 loadData();
+setInterval(loadData, REFRESH_TIME);
 </script>
 
 </body>
