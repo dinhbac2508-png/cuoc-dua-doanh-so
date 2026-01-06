@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Cuộc đua doanh số</title>
 
 <style>
@@ -14,8 +14,7 @@ body {
 
 h1 {
   text-align: center;
-  padding: 20px 0;
-  margin: 0;
+  margin: 20px 0;
   font-size: 36px;
   color: #facc15;
 }
@@ -29,12 +28,12 @@ h1 {
   gap: 30px;
 }
 
-/* mỗi cột */
+/* cột sale */
 .column {
+  width: 140px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 140px;
 }
 
 /* icon */
@@ -55,13 +54,19 @@ h1 {
   box-shadow: 0 0 12px rgba(34,197,94,0.7);
 }
 
-/* số tiền */
+/* top 1 */
+.column.leader .bar {
+  background: linear-gradient(180deg, #facc15, #eab308);
+  box-shadow: 0 0 20px rgba(250,204,21,0.9);
+}
+
+/* tiền */
 .sales {
   font-size: 22px;
   font-weight: 800;
+  color: #fff;
   margin-bottom: 10px;
-  color: #facc15;
-  text-shadow: 0 0 6px rgba(250,204,21,0.7);
+  text-shadow: 0 0 6px rgba(0,0,0,0.6);
 }
 
 /* tên */
@@ -71,28 +76,22 @@ h1 {
   font-weight: bold;
   text-align: center;
 }
-
-/* top 1 */
-.column.leader .bar {
-  background: linear-gradient(180deg, #facc15, #eab308);
-  box-shadow: 0 0 20px rgba(250,204,21,0.9);
-}
 </style>
 </head>
 
 <body>
-<h1>🏆 CUỘC ĐUA DOANH SỐ THÁNG</h1>
 
+<h1>🏆 CUỘC ĐUA DOANH SỐ THÁNG</h1>
 <div id="container"></div>
 
 <script>
-/* ====== CẤU HÌNH ====== */
-const TARGET = 3000000000; // 3 TỶ
+/* ===== CẤU HÌNH ===== */
+const TARGET = 3000000000; // 3 tỷ
 const SHEET_ID = "1ZFde_VPigMDlqlsM2aVKudr36yW6KmgYSJ_kovAeWNE";
-const SHEET_NAME = "DATA";
-const REFRESH_TIME = 30000; // 30 giây
+const SHEET_NAME = "Sheet1";
+const REFRESH_TIME = 30000;
 
-/* ====== LOAD DATA ====== */
+/* ===== LOAD DATA ===== */
 async function loadData() {
   const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
   const res = await fetch(url);
@@ -107,9 +106,8 @@ async function loadData() {
   render(data);
 }
 
-/* ====== HIỂN THỊ ====== */
+/* ===== RENDER ===== */
 function render(data) {
-  // sắp xếp giảm dần
   data.sort((a, b) => b.sales - a.sales);
 
   const container = document.getElementById("container");
@@ -132,28 +130,21 @@ function render(data) {
 
     const sales = document.createElement("div");
     sales.className = "sales";
-    sales.textContent = formatMoney(item.sales);
-
-    bar.appendChild(sales);
+    sales.textContent = item.sales.toLocaleString("vi-VN") + " ₫";
 
     const name = document.createElement("div");
     name.className = "name";
     name.textContent = item.name;
 
+    bar.appendChild(sales);
     col.appendChild(icon);
     col.appendChild(bar);
     col.appendChild(name);
-
     container.appendChild(col);
   });
 }
 
-/* ====== FORMAT TIỀN ====== */
-function formatMoney(n) {
-  return n.toLocaleString("vi-VN") + " ₫";
-}
-
-/* ====== CHẠY ====== */
+/* ===== CHẠY ===== */
 loadData();
 setInterval(loadData, REFRESH_TIME);
 </script>
