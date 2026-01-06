@@ -28,9 +28,10 @@ h1 {
   gap: 30px;
 }
 
-/* cột sale */
+/* mỗi cột */
 .column {
   width: 140px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,6 +41,14 @@ h1 {
 .icon {
   font-size: 48px;
   margin-bottom: 10px;
+}
+
+/* vùng chứa cột */
+.bar-wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
 }
 
 /* cột doanh số */
@@ -52,12 +61,23 @@ h1 {
   justify-content: center;
   transition: height 1s ease;
   box-shadow: 0 0 12px rgba(34,197,94,0.7);
+  position: relative;
 }
 
 /* top 1 */
 .column.leader .bar {
   background: linear-gradient(180deg, #facc15, #eab308);
   box-shadow: 0 0 20px rgba(250,204,21,0.9);
+}
+
+/* % */
+.percent {
+  position: absolute;
+  top: -32px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #facc15;
+  text-shadow: 0 0 6px rgba(250,204,21,0.7);
 }
 
 /* tiền */
@@ -93,17 +113,22 @@ const REFRESH_TIME = 30000;
 
 /* ===== LOAD DATA ===== */
 async function loadData() {
-  const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
-  const res = await fetch(url);
-  const rows = await res.json();
+  try {
+    const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+    const res = await fetch(url);
+    const rows = await res.json();
 
-  const data = rows.map(r => ({
-    name: r.name,
-    icon: r.icon || "💼",
-    sales: Number(r.sales.toString().replace(/[^\d]/g, ""))
-  }));
+    const data = rows.map(r => ({
+      name: r.name,
+      icon: r.icon || "💼",
+      sales: Number(r.sales.toString().replace(/[^\d]/g, ""))
+    }));
 
-  render(data);
+    render(data);
+  } catch (e) {
+    document.body.innerHTML = "<h1 style='text-align:center'>❌ Không tải được dữ liệu Google Sheet</h1>";
+    console.error(e);
+  }
 }
 
 /* ===== RENDER ===== */
@@ -124,9 +149,16 @@ function render(data) {
     icon.className = "icon";
     icon.textContent = item.icon;
 
+    const barWrapper = document.createElement("div");
+    barWrapper.className = "bar-wrapper";
+
     const bar = document.createElement("div");
     bar.className = "bar";
     bar.style.height = percent + "%";
+
+    const percentText = document.createElement("div");
+    percentText.className = "percent";
+    percentText.textContent = Math.round(percent) + "%";
 
     const sales = document.createElement("div");
     sales.className = "sales";
@@ -136,10 +168,14 @@ function render(data) {
     name.className = "name";
     name.textContent = item.name;
 
+    bar.appendChild(percentText);
     bar.appendChild(sales);
+    barWrapper.appendChild(bar);
+
     col.appendChild(icon);
-    col.appendChild(bar);
+    col.appendChild(barWrapper);
     col.appendChild(name);
+
     container.appendChild(col);
   });
 }
